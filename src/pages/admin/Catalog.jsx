@@ -60,7 +60,7 @@ const BookModal = ({ isOpen, onClose, onSubmit, editingBook, existingCategories 
 
   return (
     <div style={{
-      position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+      position: 'fixed', top: 0, left: 0, width: '100%',
       background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)',
       display: 'flex', alignItems: 'flex-start', justifyContent: 'center', zIndex: 9999,
       padding: '4rem 1rem', overflowY: 'auto'
