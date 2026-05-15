@@ -299,7 +299,7 @@ const AdminCatalog = () => {
               <tr style={{ borderBottom: '1px solid var(--border-light)', textAlign: 'left', color: 'var(--text-muted)' }}>
                 <th style={{ padding: '1rem', fontWeight: 500 }}>Identificador Vis.</th>
                 <th style={{ padding: '1rem', fontWeight: 500 }}>Detalles Metadata</th>
-                <th style={{ padding: '1rem', fontWeight: 500, textAlign: 'center' }}>Stock / Disp.</th>
+                <th style={{ padding: '1rem', fontWeight: 500, textAlign: 'center' }}>Disp./ Stock </th>
                 <th style={{ padding: '1rem', fontWeight: 500, textAlign: 'right' }}>Controles</th>
               </tr>
             </thead>

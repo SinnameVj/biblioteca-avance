@@ -242,7 +242,7 @@ const BorrowModal = ({ book, currentUser, onConfirm, onCancel }) => {
               }}
             >
               <p style={{ fontSize: "0.9rem", marginBottom: "0.5rem" }}>
-                Duración Oficial: <strong>14 Días Naturales</strong>
+                Duración Oficial: <strong>14 Días Hábiles</strong>
               </p>
               <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
                 * El periodo comenzará a contar en el momento exacto en el que

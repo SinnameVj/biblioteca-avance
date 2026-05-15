@@ -109,7 +109,7 @@ const ProfDashboard = () => {
                     ) : isReservedByMe ? (
                       <span style={{ fontSize: '0.75rem', color: 'var(--accent-gold)', fontWeight: 500 }}>Prioridad Ejecutada</span>
                     ) : book.availableCopies > 0 ? (
-                      <button onClick={() => handleBorrowRequest(book)} className="btn-primary" style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem' }}>Solicitar Modal</button>
+                      <button onClick={() => handleBorrowRequest(book)} className="btn-primary" style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem' }}>Solicitar</button>
                     ) : (
                       <button 
                         onClick={() => reserveBook(book.id, currentUser.id, true)}

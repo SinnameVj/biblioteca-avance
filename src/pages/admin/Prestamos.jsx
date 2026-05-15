@@ -223,7 +223,7 @@ const AdminPrestamos = () => {
                         padding: '0.75rem 1rem'
                       }}
                     >
-                      {penalty.amount > 0 ? 'Liquidar Mora' : 'Recibir'}
+                      {penalty.amount > 0 ? 'Liquidar Mora' : 'Recibido'}
                     </button>
                   </div>
                 )
