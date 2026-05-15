@@ -129,57 +129,7 @@ const AdminPrestamos = () => {
           )}
         </section>
 
-        {/* 2. LISTA DE ESPERA (RESERVAS) */}
-        <section>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.3rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#8B5CF6', boxShadow: '0 0 10px rgba(139, 92, 246, 0.4)' }}></div>
-              Lista de Espera Activa
-            </h2>
-            <span className="badge" style={{ background: 'rgba(139, 92, 246, 0.1)', color: '#8B5CF6', fontWeight: 600 }}>{reservations.length} En Fila</span>
-          </div>
-          
-          {reservations.length === 0 ? (
-            <p style={{ color: 'var(--text-muted)', padding: '1rem', border: '1px dashed var(--border-light)', borderRadius: '8px', textAlign: 'center' }}>No hay usuarios en lista de espera.</p>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '1.25rem' }}>
-              {reservations.map(res => {
-                const book = books.find(b => b.id === res.bookId)
-                const user = users.find(u => u.id === res.userId)
-                const isAvailable = book?.availableCopies > 0;
-                
-                // Fallback: si el usuario no tiene teléfono en perfil, buscamos si alguna vez lo puso al pedir otro libro
-                const userLoans = loans.filter(l => l.userId === user?.id && l.phone);
-                const fallbackPhone = userLoans.length > 0 ? userLoans[0].phone : null;
-                const finalPhone = user?.phone || fallbackPhone;
-                
-                return (
-                  <div key={res.id} className="glass-panel" style={{ padding: '1.25rem', borderLeft: `4px solid ${res.priority ? '#8B5CF6' : 'var(--text-muted)'}` }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div style={{ display: 'flex', gap: '1rem' }}>
-                        <img src={book?.cover} alt="" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} />
-                        <div>
-                          <h3 style={{ fontSize: '0.95rem', fontWeight: 600 }}>{book?.title}</h3>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{user?.name} {res.priority && <span style={{ color: '#8B5CF6', fontSize: '0.7rem', fontWeight: 700 }}>[DOCENTE]</span>}</p>
-                        </div>
-                      </div>
-                      {isAvailable && (
-                        <button 
-                          onClick={() => handleWhatsApp(finalPhone, user?.name, book?.title, 'queue')}
-                          style={{ background: '#25D366', color: 'white', border: 'none', padding: '0.4rem 0.75rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer' }}
-                        >
-                          <MessageCircle size={14} /> Notificar Stock
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </section>
-
-        {/* 3. DEVOLUCIONES PENDIENTES */}
+        {/* 2. DEVOLUCIONES PENDIENTES */}
         <section>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
             <h2 style={{ fontSize: '1.3rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -225,6 +175,113 @@ const AdminPrestamos = () => {
                     >
                       {penalty.amount > 0 ? 'Liquidar Mora' : 'Recibido'}
                     </button>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* 3. SOLICITUDES DE EXTENSIÓN */}
+        <section>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.3rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#10B981', boxShadow: '0 0 10px rgba(16, 185, 129, 0.4)' }}></div>
+              Solicitudes de Extensión
+            </h2>
+            <span className="badge" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10B981', fontWeight: 600 }}>{extensionRequests.length} Pendientes</span>
+          </div>
+          
+          {extensionRequests.length === 0 ? (
+            <p style={{ color: 'var(--text-muted)', padding: '1rem', border: '1px dashed var(--border-light)', borderRadius: '8px', textAlign: 'center' }}>No hay solicitudes de extensión pendientes.</p>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(450px, 1fr))', gap: '1.25rem' }}>
+              {extensionRequests.map(loan => {
+                const book = books.find(b => b.id === loan.bookId)
+                const user = users.find(u => u.id === loan.userId)
+                const extensionDays = user?.role === 'profesor' ? 30 : 14
+                const { days, status } = getDaysRemaining(loan.dueDate)
+
+                return (
+                  <div key={loan.id} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: '4px solid #10B981' }}>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                      <img src={book?.cover} alt="" style={{ width: '50px', height: '75px', objectFit: 'cover', borderRadius: '4px' }} />
+                      <div>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: 600 }}>{book?.title}</h3>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                          Solicita: <strong>{user?.name}</strong>
+                          <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', color: user?.role === 'profesor' ? 'var(--accent-gold)' : 'var(--text-muted)', fontWeight: 600 }}>
+                            [{user?.role === 'profesor' ? 'DOCENTE' : 'ESTUDIANTE'}]
+                          </span>
+                        </p>
+                        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.4rem', fontSize: '0.8rem' }}>
+                          <span style={{ color: status === 'overdue' ? '#EF4444' : 'var(--text-muted)' }}>
+                            Vence: {new Date(loan.dueDate).toLocaleDateString()}
+                          </span>
+                          <span style={{ color: '#10B981', fontWeight: 700 }}>
+                            +{extensionDays} días solicitados
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button onClick={() => { rejectExtension(loan.id); showToast('Extensión rechazada.'); }} className="btn-secondary" style={{ padding: '0.6rem', color: 'var(--danger-text)' }} title="Rechazar">
+                        <XSquare size={20} />
+                      </button>
+                      <button onClick={() => { approveExtension(loan.id); showToast(`✅ Extensión aprobada: +${extensionDays} días para ${user?.name}`); }} className="btn-primary" style={{ padding: '0.6rem 1.25rem', background: '#10B981', color: 'white', border: 'none', fontWeight: 600 }}>
+                        Aprobar +{extensionDays}d
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* 4. LISTA DE ESPERA (RESERVAS) */}
+        <section>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.3rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#8B5CF6', boxShadow: '0 0 10px rgba(139, 92, 246, 0.4)' }}></div>
+              Lista de Espera Activa
+            </h2>
+            <span className="badge" style={{ background: 'rgba(139, 92, 246, 0.1)', color: '#8B5CF6', fontWeight: 600 }}>{reservations.length} En Fila</span>
+          </div>
+          
+          {reservations.length === 0 ? (
+            <p style={{ color: 'var(--text-muted)', padding: '1rem', border: '1px dashed var(--border-light)', borderRadius: '8px', textAlign: 'center' }}>No hay usuarios en lista de espera.</p>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '1.25rem' }}>
+              {reservations.map(res => {
+                const book = books.find(b => b.id === res.bookId)
+                const user = users.find(u => u.id === res.userId)
+                const isAvailable = book?.availableCopies > 0;
+                
+                // Fallback: si el usuario no tiene teléfono en perfil, buscamos si alguna vez lo puso al pedir otro libro
+                const userLoans = loans.filter(l => l.userId === user?.id && l.phone);
+                const fallbackPhone = userLoans.length > 0 ? userLoans[0].phone : null;
+                const finalPhone = user?.phone || fallbackPhone;
+                
+                return (
+                  <div key={res.id} className="glass-panel" style={{ padding: '1.25rem', borderLeft: `4px solid ${res.priority ? '#8B5CF6' : 'var(--text-muted)'}` }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ display: 'flex', gap: '1rem' }}>
+                        <img src={book?.cover} alt="" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} />
+                        <div>
+                          <h3 style={{ fontSize: '0.95rem', fontWeight: 600 }}>{book?.title}</h3>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{user?.name} {res.priority && <span style={{ color: '#8B5CF6', fontSize: '0.7rem', fontWeight: 700 }}>[DOCENTE]</span>}</p>
+                        </div>
+                      </div>
+                      {isAvailable && (
+                        <button 
+                          onClick={() => handleWhatsApp(finalPhone, user?.name, book?.title, 'queue')}
+                          style={{ background: '#25D366', color: 'white', border: 'none', padding: '0.4rem 0.75rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer' }}
+                        >
+                          <MessageCircle size={14} /> Notificar Stock
+                        </button>
+                      )}
+                    </div>
                   </div>
                 )
               })}

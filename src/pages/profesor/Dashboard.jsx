@@ -27,6 +27,7 @@ const ProfDashboard = () => {
   const [borrowModalData, setBorrowModalData] = useState({
     isOpen: false,
     book: null,
+    heldId: null,
   });
   const navigate = useNavigate();
 
@@ -38,13 +39,17 @@ const ProfDashboard = () => {
 
   const recentBooks = [...books].reverse().slice(0, 4);
 
-  const handleBorrowRequest = (book) => {
-    setBorrowModalData({ isOpen: true, book });
+  const handleBorrowRequest = (book, heldId = null) => {
+    setBorrowModalData({ isOpen: true, book, heldId });
   };
 
-  const confirmBorrow = (bookId, userId, isExtending) => {
-    requestBorrow(bookId, userId, isExtending);
-    setBorrowModalData({ isOpen: false, book: null });
+  const confirmBorrow = (bookId, userId, isExtending, phone) => {
+    if (borrowModalData.heldId) {
+      claimHeldBook(borrowModalData.heldId, phone);
+    } else {
+      requestBorrow(bookId, userId, isExtending, phone);
+    }
+    setBorrowModalData({ isOpen: false, book: null, heldId: null });
   };
 
   return (
@@ -54,7 +59,7 @@ const ProfDashboard = () => {
           book={borrowModalData.book}
           currentUser={currentUser}
           onConfirm={confirmBorrow}
-          onCancel={() => setBorrowModalData({ isOpen: false, book: null })}
+          onCancel={() => setBorrowModalData({ isOpen: false, book: null, heldId: null })}
         />
       )}
 
@@ -161,7 +166,7 @@ const ProfDashboard = () => {
                       <XCircle size={16} /> Liberar libro
                     </button>
                     <button
-                      onClick={() => claimHeldBook(h.id)}
+                      onClick={() => handleBorrowRequest(book, h.id)}
                       style={{
                         padding: "0.5rem 0.8rem",
                         display: "flex",
@@ -234,7 +239,7 @@ const ProfDashboard = () => {
               const isReservedByMe = myReservations.some(
                 (r) => r.bookId === book.id,
               );
-              const isLoanedByMe = myLoans.some((l) => l.bookId === book.id);
+              const isLoanedByMe = loans.some((l) => l.bookId === book.id && l.userId === currentUser.id && l.status !== 'returned');
               const isHeldForMe = myHeldBooks.some((h) => h.bookId === book.id);
 
               return (

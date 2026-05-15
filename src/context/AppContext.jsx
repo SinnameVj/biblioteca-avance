@@ -9,6 +9,7 @@ export const useAppContext = () => useContext(AppContext);
 export const AppProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [configError, setConfigError] = useState(false);
   const [toast, setToast] = useState(null); // { message, type: 'success' | 'error' }
 
@@ -37,6 +38,7 @@ export const AppProvider = ({ children }) => {
       if (session) {
         fetchUserProfile(session.user.id);
       } else {
+        setDataLoaded(true);
         setLoading(false);
       }
     });
@@ -48,6 +50,7 @@ export const AppProvider = ({ children }) => {
       } else {
         setCurrentUser(null);
         setUsers([]);
+        setDataLoaded(true);
         setLoading(false);
       }
     });
@@ -65,8 +68,10 @@ export const AppProvider = ({ children }) => {
     if (!error && data) {
       setCurrentUser(data);
       if (data.role === 'admin') {
-        fetchAllUsers();
+        await fetchAllUsers();
       }
+      // Fetch library data and wait for it before declaring load complete
+      await fetchData();
     }
     setLoading(false);
   };
@@ -169,11 +174,17 @@ export const AppProvider = ({ children }) => {
 
     } catch (err) {
       console.error('Error fetching data:', err);
+    } finally {
+      setDataLoaded(true);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    // Only fetch data independently if user is already authenticated
+    // (first load is handled by fetchUserProfile)
+    if (currentUser) {
+      fetchData();
+    }
 
     // REALTIME SUBSCRIPTIONS
     const channel = supabase
@@ -483,7 +494,11 @@ export const AppProvider = ({ children }) => {
     const loan = loans.find(l => l.id === loanId);
     if (!loan) return;
 
-    const newDueDate = new Date(new Date(loan.dueDate).getTime() + 14 * 24 * 60 * 60 * 1000).toISOString();
+    // Determine extension days by user role: 30 for professors, 14 for students
+    const loanUser = users.find(u => String(u.id) === String(loan.userId));
+    const extensionDays = loanUser?.role === 'profesor' ? 30 : 14;
+
+    const newDueDate = new Date(new Date(loan.dueDate).getTime() + extensionDays * 24 * 60 * 60 * 1000).toISOString();
     const { error } = await supabase
       .from('loans')
       .update({
@@ -748,18 +763,7 @@ export const AppProvider = ({ children }) => {
     return false;
   };
 
-  const adjustPenalty = async (loanId, amount) => {
-    const { error } = await supabase
-      .from('loans')
-      .update({ manual_penalty: parseFloat(amount) })
-      .eq('id', loanId);
-    
-    if (!error) {
-      setLoans(prev => prev.map(l => l.id === loanId ? { ...l, manualPenalty: parseFloat(amount) } : l));
-      return true;
-    }
-    return false;
-  };
+
 
   const updateBookPenalty = async (bookId, rate) => {
     const numericRate = parseFloat(rate);
@@ -779,14 +783,14 @@ export const AppProvider = ({ children }) => {
   };
 
   const value = {
-    currentUser, users, books, loans, reservations, heldBooks, categories, loading, configError,
+    currentUser, users, books, loans, reservations, heldBooks, categories, loading: loading || !dataLoaded, configError,
     login, registerUser, updateProfile, logout,
     requestBorrow, approveBorrow, rejectBorrow,
     requestReturn, approveReturn, forceReturn,
     requestExtension, approveExtension, rejectExtension,
     reserveBook, claimHeldBook, rejectHeldBook,
-    addBook, updateBook, deleteBook, adjustPenalty, updateBookPenalty,
-    toast, showToast, forceReturn
+    addBook, updateBook, deleteBook, updateBookPenalty,
+    toast, showToast
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

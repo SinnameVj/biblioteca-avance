@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { X, Book, Clock, CheckCircle, AlertCircle, Edit2, Save, History } from 'lucide-react'
+import { X, Book, Clock, CheckCircle, AlertCircle, History } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 import { getDaysRemaining, calculatePenalty } from '../utils/penalties'
 
 const UserDetailsModal = ({ user, onClose, allLoans, allBooks }) => {
-  const { adjustPenalty, approveBorrow, rejectBorrow, approveReturn, rejectReturn } = useAppContext();
-  const [editingLoan, setEditingLoan] = useState(null);
-  const [tempPenalty, setTempPenalty] = useState("");
+  const { approveBorrow, rejectBorrow, approveReturn, rejectReturn } = useAppContext();
 
   if (!user) return null;
 
@@ -25,13 +23,7 @@ const UserDetailsModal = ({ user, onClose, allLoans, allBooks }) => {
       return acc + calculatePenalty(l.dueDate, new Date(), l.manualPenalty, b?.penaltyRate).amount;
     }, 0);
 
-  const handleAdjust = async (loanId) => {
-    const success = await adjustPenalty(loanId, tempPenalty);
-    if (success) {
-      setEditingLoan(null);
-      setTempPenalty("");
-    }
-  };
+
 
   const modalContent = (
     <div style={{
@@ -161,39 +153,11 @@ const UserDetailsModal = ({ user, onClose, allLoans, allBooks }) => {
                   {(loan.status === 'active' || loan.status === 'overdue') && (
                     <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div>
-                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Mora Acumulada</p>
+                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Mora Acumulada (automática)</p>
                         <p style={{ fontSize: '1.1rem', fontWeight: 700, color: penalty.amount > 0 ? '#EF4444' : 'var(--success-text)' }}>
                           S/ {penalty.amount.toFixed(2)}
                         </p>
                       </div>
-
-                      {editingLoan === loan.id ? (
-                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                          <input 
-                            type="number" 
-                            step="0.5"
-                            className="input-field" 
-                            style={{ width: '80px', padding: '0.4rem' }} 
-                            placeholder="Ej: 5.00"
-                            value={tempPenalty}
-                            onChange={e => setTempPenalty(e.target.value)}
-                          />
-                          <button onClick={() => handleAdjust(loan.id)} className="btn-primary" style={{ padding: '0.4rem', background: '#10B981' }}>
-                            <Save size={16} />
-                          </button>
-                          <button onClick={() => setEditingLoan(null)} className="btn-secondary" style={{ padding: '0.4rem' }}>
-                            <X size={16} />
-                          </button>
-                        </div>
-                      ) : (
-                        <button 
-                          onClick={() => { setEditingLoan(loan.id); setTempPenalty(loan.manualPenalty || 0); }} 
-                          className="btn-secondary" 
-                          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}
-                        >
-                          <Edit2 size={14} /> Ajustar Mora
-                        </button>
-                      )}
                     </div>
                   )}
                 </div>

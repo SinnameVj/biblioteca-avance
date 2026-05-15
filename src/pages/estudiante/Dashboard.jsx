@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 
 const EstudianteDashboard = () => {
   const { books, loans, reservations, heldBooks, currentUser, reserveBook, claimHeldBook, rejectHeldBook, requestBorrow } = useAppContext()
-  const [borrowModalData, setBorrowModalData] = useState({ isOpen: false, book: null })
+  const [borrowModalData, setBorrowModalData] = useState({ isOpen: false, book: null, heldId: null })
   const navigate = useNavigate()
 
   const myLoans = loans.filter(l => l.userId === currentUser.id && l.status !== 'returned')
@@ -16,13 +16,17 @@ const EstudianteDashboard = () => {
   
   const catalogBooks = [...books].slice(0, 4)
 
-  const handleBorrowRequest = (book) => {
-    setBorrowModalData({ isOpen: true, book })
+  const handleBorrowRequest = (book, heldId = null) => {
+    setBorrowModalData({ isOpen: true, book, heldId })
   }
 
-  const confirmBorrow = (bookId, userId, isExtending) => {
-    requestBorrow(bookId, userId, isExtending);
-    setBorrowModalData({ isOpen: false, book: null });
+  const confirmBorrow = (bookId, userId, isExtending, phone) => {
+    if (borrowModalData.heldId) {
+      claimHeldBook(borrowModalData.heldId, phone);
+    } else {
+      requestBorrow(bookId, userId, isExtending, phone);
+    }
+    setBorrowModalData({ isOpen: false, book: null, heldId: null });
   }
 
   return (
@@ -32,7 +36,7 @@ const EstudianteDashboard = () => {
           book={borrowModalData.book}
           currentUser={currentUser}
           onConfirm={confirmBorrow}
-          onCancel={() => setBorrowModalData({ isOpen: false, book: null })}
+          onCancel={() => setBorrowModalData({ isOpen: false, book: null, heldId: null })}
         />
       )}
 
@@ -62,7 +66,7 @@ const EstudianteDashboard = () => {
                     <button onClick={() => rejectHeldBook(h.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: 'transparent', color: 'var(--text-muted)', fontSize: '0.85rem', padding: '0.5rem 0.8rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)' }}>
                       <XCircle size={16} /> Cancelar
                     </button>
-                    <button onClick={() => claimHeldBook(h.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: '#8B5CF6', color: 'white', fontSize: '0.85rem', padding: '0.5rem 0.8rem', borderRadius: 'var(--radius-md)' }}>
+                    <button onClick={() => handleBorrowRequest(book, h.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', background: '#8B5CF6', color: 'white', fontSize: '0.85rem', padding: '0.5rem 0.8rem', borderRadius: 'var(--radius-md)' }}>
                       <CheckCircle size={16} /> Solicitar Ya
                     </button>
                   </div>
@@ -142,7 +146,7 @@ const EstudianteDashboard = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
           {catalogBooks.map((book, idx) => {
             const isReservedByMe = myReservations.some(r => r.bookId === book.id)
-            const isLoanedByMe = myLoans.some(l => l.bookId === book.id)
+            const isLoanedByMe = loans.some(l => l.bookId === book.id && l.userId === currentUser.id && l.status !== 'returned')
             const isHeldForMe = myHeldBooks.some(h => h.bookId === book.id)
 
             return (
@@ -167,7 +171,7 @@ const EstudianteDashboard = () => {
                     <button 
                       onClick={() => {
                         const heldId = myHeldBooks.find(h => h.bookId === book.id)?.id;
-                        if (heldId) claimHeldBook(heldId);
+                        if (heldId) handleBorrowRequest(book, heldId);
                       }} 
                       className="btn-primary" 
                       style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem', background: 'var(--info-text)' }}
@@ -196,9 +200,10 @@ const EstudianteDashboard = () => {
                   ) : (
                     <button 
                       onClick={() => reserveBook(book.id, currentUser.id, currentUser.role === 'profesor')} 
-                      style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '4px', border: '1px solid var(--border-focus)', color: 'var(--text-secondary)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+                      className="btn-secondary"
+                      style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem' }}
                     >
-                      <Bookmark size={12} /> Filarse
+                      Unirse a la Fila
                     </button>
                   )}
                 </div>

@@ -99,7 +99,7 @@ const Catalog = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.25rem' }}>
           {filteredBooks.map(book => {
             const isReservedByMe = reservations.some(r => r.bookId === book.id && r.userId === currentUser.id)
-            const isLoanedByMe = loans.some(l => l.bookId === book.id && l.userId === currentUser.id)
+            const isLoanedByMe = loans.some(l => l.bookId === book.id && l.userId === currentUser.id && l.status !== 'returned')
             const isHeldForMe = heldBooks.some(h => h.bookId === book.id && h.userId === currentUser.id)
 
             return (
@@ -151,10 +151,17 @@ const Catalog = () => {
                   ) : (
                     <button 
                       onClick={() => reserveBook(book.id, currentUser.id, currentUser.role === 'profesor')} 
-                      className={currentUser.role === 'profesor' ? "btn-gold" : "btn-secondary"} 
-                      style={{ width: '100%', fontSize: '0.75rem', padding: '0.4rem' }}
+                      style={currentUser.role === 'profesor' ? {
+                        width: '100%', fontSize: '0.75rem', padding: '0.4rem',
+                        background: 'var(--bg-tertiary)', border: '1px solid var(--accent-gold)',
+                        borderRadius: '4px', color: 'var(--accent-gold)', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem'
+                      } : {
+                        width: '100%', fontSize: '0.75rem', padding: '0.4rem'
+                      }}
+                      className={currentUser.role === 'profesor' ? '' : 'btn-secondary'}
                     >
-                      {currentUser.role === 'profesor' ? 'Reservar Prioridad' : 'Unirse a la Fila'}
+                      {currentUser.role === 'profesor' ? <><span>Reserva</span> <Star size={12} /></> : 'Unirse a la Fila'}
                     </button>
                   )}
                 </div>

@@ -134,7 +134,7 @@ const MisPrestamos = () => {
                   <div style={{ borderTop: '1px solid var(--bg-tertiary)', paddingTop: '1rem', marginTop: 'auto', display: 'flex', gap: '0.75rem' }}>
                     {canManipulate && !loan.extensionRequested && !isOverdue && (
                       <button onClick={() => requestExtension(loan.id)} className="btn-secondary" style={{ flex: 1, fontSize: '0.85rem' }}>
-                        Pedir +14 días
+                        Pedir +{currentUser.role === 'profesor' ? 30 : 14} días
                       </button>
                     )}
                     <button 
