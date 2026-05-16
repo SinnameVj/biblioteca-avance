@@ -190,7 +190,7 @@ const AdminPrestamos = () => {
       <div className="mostrador-header">
         <div>
           <h1>Mostrador <BookMarked size={24} className="header-icon" /></h1>
-          <p className="header-subtitle">Centro operativo para la gestión de préstamos, devoluciones, reservas y extensiones.</p>
+          <p className="header-subtitle">Gestión de préstamos, devoluciones, reservas y extensiones.</p>
         </div>
       </div>
 
@@ -250,7 +250,7 @@ const AdminPrestamos = () => {
               <h2>
                 <div style={{ width: 10, height: 10, borderRadius: 3, background: '#F59E0B', boxShadow: '0 0 8px rgba(245,158,11,0.4)' }} />
                 Esperando Recogida en Ventanilla
-                <span className="section-subtitle">— Solicitudes listas para ser entregadas al usuario.</span>
+                <span className="section-subtitle"> - Solicitudes por entregar</span>
               </h2>
             </div>
             <div className="mostrador-section-body">
@@ -263,7 +263,7 @@ const AdminPrestamos = () => {
             {pendingPickups.length > 0 && (
               <div className="mostrador-section-footer">
                 <button onClick={() => { setPickupSearch(''); setShowAllPickups(true) }}>
-                  Ver todos los pedidos listos ({pendingPickups.length}) <ArrowRight size={14} />
+                  Ver todas las solicitudes ({pendingPickups.length}) <ArrowRight size={14} />
                 </button>
               </div>
             )}
@@ -273,7 +273,7 @@ const AdminPrestamos = () => {
           <div className="mostrador-section">
             <div className="mostrador-section-header" style={{ borderBottom: 'none', paddingBottom: 0 }}>
               <div>
-                <h2 style={{ marginBottom: '0.15rem' }}>Gestión Operativa Diaria</h2>
+                <h2 style={{ marginBottom: '0.15rem' }}>Control de solicitudes</h2>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Procesa devoluciones y extensiones.</span>
               </div>
             </div>
@@ -345,7 +345,7 @@ const AdminPrestamos = () => {
           {/* LISTA DE ESPERA */}
           <div className="mostrador-section">
             <div className="mostrador-section-header">
-              <h2>Lista de Espera (Reservas)</h2>
+              <h2>Lista de Espera</h2>
               <span className="section-badge" style={{ background: 'rgba(139, 92, 246, 0.1)', color: '#8B5CF6' }}>{reservations.length} en cola</span>
             </div>
             <div className="mostrador-section-body" style={{ padding: '0.5rem 1.5rem' }}>
