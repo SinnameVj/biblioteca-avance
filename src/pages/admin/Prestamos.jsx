@@ -354,7 +354,7 @@ const AdminPrestamos = () => {
               ) : (
                 <>
                   <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', padding: '0.5rem 0 0.25rem', fontWeight: 600, letterSpacing: '0.03em' }}>Usuarios esperando disponibilidad de libros.</div>
-                  {reservations.slice(0, 5).map((res, idx) => {
+                  {[...reservations].sort((a, b) => (b.priority ? 1 : 0) - (a.priority ? 1 : 0) || new Date(a.date) - new Date(b.date)).slice(0, 5).map((res, idx) => {
                     const book = books.find(b => b.id === res.bookId)
                     const user = users.find(u => u.id === res.userId)
                     const isAvailable = book?.availableCopies > 0
