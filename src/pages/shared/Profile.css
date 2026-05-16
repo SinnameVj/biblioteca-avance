@@ -1,0 +1,344 @@
+/* ============================================
+   MI PERFIL — Profile & Security Styles
+   ============================================ */
+
+.pf-header { margin-bottom: 1.5rem; }
+.pf-header h1 { font-size: 1.6rem; font-weight: 700; color: var(--text-primary); }
+.pf-header .pf-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem; }
+
+/* Two-column grid */
+.pf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* Card */
+.pf-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.pf-card-header {
+  padding: 1.1rem 1.4rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.pf-card-header-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pf-card-header-icon.personal {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60A5FA;
+}
+
+.pf-card-header-icon.security {
+  background: rgba(139, 92, 246, 0.12);
+  color: #C4B5FD;
+}
+
+.pf-card-header-text h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pf-card-header-text p {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.pf-card-body {
+  padding: 1.4rem;
+}
+
+/* Avatar block */
+.pf-avatar-block {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.pf-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.pf-avatar-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pf-avatar-email {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+/* Role Badge */
+.pf-role-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.3rem;
+}
+
+.pf-role-badge.admin {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.pf-role-badge.profesor {
+  background: rgba(139, 92, 246, 0.2);
+  color: #C4B5FD;
+  border: 1px solid rgba(139, 92, 246, 0.38);
+}
+
+.pf-role-badge.estudiante {
+  background: rgba(59, 130, 246, 0.18);
+  color: #93C5FD;
+  border: 1px solid rgba(59, 130, 246, 0.32);
+}
+
+/* Form fields */
+.pf-field {
+  margin-bottom: 1rem;
+}
+
+.pf-field:last-child {
+  margin-bottom: 0;
+}
+
+.pf-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.pf-label svg {
+  flex-shrink: 0;
+}
+
+.pf-input {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s;
+}
+
+.pf-input::placeholder {
+  color: var(--text-muted);
+}
+
+.pf-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.pf-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Password field with eye toggle */
+.pf-password-wrap {
+  position: relative;
+}
+
+.pf-password-wrap .pf-input {
+  padding-right: 2.8rem;
+}
+
+.pf-eye-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.pf-eye-btn:hover {
+  color: var(--text-secondary);
+}
+
+/* Security requirements box */
+.pf-requirements {
+  background: rgba(59, 130, 246, 0.06);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.pf-requirements-title {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #60A5FA;
+  margin-bottom: 0.5rem;
+}
+
+.pf-req-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  padding: 0.15rem 0;
+}
+
+.pf-req-item.met {
+  color: #34D399;
+}
+
+.pf-req-item svg {
+  flex-shrink: 0;
+}
+
+/* Buttons */
+.pf-btn {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.18s ease;
+  margin-top: 1rem;
+}
+
+.pf-btn-primary {
+  background: var(--accent-primary);
+  color: #fff;
+  border: none;
+}
+
+.pf-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.pf-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pf-btn-security {
+  background: rgba(139, 92, 246, 0.15);
+  color: #C4B5FD;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.pf-btn-security:hover {
+  background: rgba(139, 92, 246, 0.25);
+}
+
+.pf-btn-security:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Success message */
+.pf-success-msg {
+  color: #34D399;
+}
+
+/* Error message */
+.pf-error-msg {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #F87171;
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Footer note */
+.pf-note {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .pf-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .pf-card-body {
+    padding: 1rem;
+  }
+
+  .pf-avatar-block {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+}
