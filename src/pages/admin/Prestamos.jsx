@@ -128,22 +128,22 @@ const AdminPrestamos = () => {
         <div className="pickup-info">
           <div className="pickup-title">{book?.title}</div>
           <div className="pickup-user">
-            <User size={13} />
-            Solicitado por: <strong>{user?.name}</strong>
+            <User size={12} />
+            <strong>{user?.name}</strong>
             <RoleBadge role={user?.role} />
+            {isDocente && <span className="pickup-badge priority">★ Docente</span>}
           </div>
           <div className="pickup-meta-row">
             <div className="pickup-meta-item">
               <span className="meta-label">Solicitado</span>
-              <span className="meta-value">{new Date(loan.requestDate).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })} - {new Date(loan.requestDate).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}</span>
+              <span className="meta-value">{new Date(loan.requestDate).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })} · {new Date(loan.requestDate).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
           </div>
-          {isDocente && <span className="pickup-badge priority">Prioridad docente</span>}
-          <div className="pickup-actions">
-            <button className="btn-deliver" onClick={() => approveBorrow(loan.id)}>Entregar</button>
-            <button className="btn-whatsapp" onClick={() => handleWhatsApp(loan.phone || user?.phone, user?.name, book?.title, 'pickup')} title="Avisar por WhatsApp"><MessageCircle size={16} /></button>
-            <button className="btn-reject" onClick={() => rejectBorrow(loan.id)} title="Denegar solicitud"><XSquare size={16} /></button>
-          </div>
+        </div>
+        <div className="pickup-actions">
+          <button className="btn-deliver" onClick={() => approveBorrow(loan.id)}>Entregar</button>
+          <button className="btn-whatsapp" onClick={() => handleWhatsApp(loan.phone || user?.phone, user?.name, book?.title, 'pickup')} title="Avisar por WhatsApp"><MessageCircle size={15} /></button>
+          <button className="btn-reject" onClick={() => rejectBorrow(loan.id)} title="Denegar solicitud"><XSquare size={15} /></button>
         </div>
       </div>
     )
