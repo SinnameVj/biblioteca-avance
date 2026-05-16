@@ -25,7 +25,8 @@ const BookModal = ({ isOpen, onClose, onSubmit, editingBook, existingCategories 
       setNewCategoryName('');
     }
     setIsSaving(false);
-  }, [editingBook, isOpen, existingCategories])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingBook, isOpen])
 
   if (!isOpen) return null;
 
