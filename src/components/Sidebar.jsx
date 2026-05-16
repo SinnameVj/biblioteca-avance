@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { BookOpen, Users, LogOut, Grid, BookMarked, User, AlertTriangle, ClipboardList, ChevronRight } from 'lucide-react'
+import { BookOpen, Users, LogOut, Grid, BookMarked, User, AlertTriangle, ClipboardList, ChevronRight, History } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 
 const SIDEBAR_COLLAPSED = '72px'
@@ -32,6 +32,7 @@ const Sidebar = () => {
         { path: '/profesor', icon: <Grid size={18} />, label: 'Inicio' },
         { path: '/profesor/catalogo', icon: <BookOpen size={18} />, label: 'Catálogo' },
         { path: '/profesor/prestamos', icon: <BookMarked size={18} />, label: 'Mis Préstamos' },
+        { path: '/profesor/historial', icon: <History size={18} />, label: 'Historial' },
         { path: '/profesor/perfil', icon: <User size={18} />, label: 'Perfil' },
       ]
     } else {
@@ -39,6 +40,7 @@ const Sidebar = () => {
         { path: '/estudiante', icon: <Grid size={18} />, label: 'Inicio' },
         { path: '/estudiante/catalogo', icon: <BookOpen size={18} />, label: 'Catálogo' },
         { path: '/estudiante/prestamos', icon: <BookMarked size={18} />, label: 'Mis Préstamos' },
+        { path: '/estudiante/historial', icon: <History size={18} />, label: 'Historial' },
         { path: '/estudiante/perfil', icon: <User size={18} />, label: 'Perfil' },
       ]
     }

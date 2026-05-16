@@ -16,6 +16,7 @@ import EstudianteDashboard from './pages/estudiante/Dashboard'
 import Catalog from './pages/shared/Catalog'
 import MisPrestamos from './pages/shared/MisPrestamos'
 import Profile from './pages/shared/Profile'
+import Historial from './pages/shared/Historial'
 
 const PrivateRoute = ({ children, allowedRoles }) => {
   const { currentUser } = useAppContext()
@@ -131,6 +132,7 @@ function App() {
             <Route index element={<ProfDashboard />} />
             <Route path="catalogo" element={<Catalog />} />
             <Route path="prestamos" element={<MisPrestamos />} />
+            <Route path="historial" element={<Historial />} />
             <Route path="perfil" element={<Profile />} />
           </Route>
           
@@ -139,6 +141,7 @@ function App() {
             <Route index element={<EstudianteDashboard />} />
             <Route path="catalogo" element={<Catalog />} />
             <Route path="prestamos" element={<MisPrestamos />} />
+            <Route path="historial" element={<Historial />} />
             <Route path="perfil" element={<Profile />} />
           </Route>
 
