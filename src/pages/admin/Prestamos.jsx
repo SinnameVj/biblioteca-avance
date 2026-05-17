@@ -181,7 +181,10 @@ const AdminPrestamos = () => {
     )
   }
 
-  const hasAlerts = overdueLoans.length > 0 || urgentLoans.length > 0 || priorityReservations.length > 0 || extensionRequests.length > 0
+  const pendingReturnsCount = pendingReturns.length
+  const pendingPickupsCount = pendingPickups.length
+
+  const hasAlerts = overdueLoans.length > 0 || urgentLoans.length > 0 || priorityReservations.length > 0 || extensionRequests.length > 0 || pendingReturnsCount > 0 || pendingPickupsCount > 0
 
   return (
     <div className="animate-fade-in" style={{ paddingBottom: '2rem' }}>
@@ -384,7 +387,10 @@ const AdminPrestamos = () => {
 
           {/* RECORDATORIOS Y ALERTAS */}
           <div className="mostrador-section">
-            <div className="mostrador-section-header"><h2>Recordatorios y Alertas</h2></div>
+            <div className="mostrador-section-header">
+              <h2>Recordatorios y Alertas</h2>
+              {hasAlerts && <span className="section-badge" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#F87171' }}>{overdueLoans.length + urgentLoans.length + extensionRequests.length + priorityReservations.length + pendingReturnsCount + pendingPickupsCount} activas</span>}
+            </div>
             <div className="mostrador-section-body" style={{ padding: '0.75rem 1rem' }}>
               {overdueLoans.length > 0 && (
                 <div className="alert-item" onClick={() => navigate('/admin/penalizaciones')}>
@@ -400,8 +406,18 @@ const AdminPrestamos = () => {
                 <div className="alert-item">
                   <div className="alert-icon-wrap alert-amber"><Bell size={18} /></div>
                   <div className="alert-info">
-                    <div className="alert-title">{urgentLoans.length} libros vencen pronto</div>
-                    <div className="alert-sub">Requieren atención</div>
+                    <div className="alert-title">{urgentLoans.length} préstamos por vencer</div>
+                    <div className="alert-sub">En los próximos 7 días</div>
+                  </div>
+                  <ChevronRight size={16} className="alert-chevron" />
+                </div>
+              )}
+              {pendingReturnsCount > 0 && (
+                <div className="alert-item" onClick={() => setActiveTab('devoluciones')}>
+                  <div className="alert-icon-wrap alert-blue"><BookOpen size={18} /></div>
+                  <div className="alert-info">
+                    <div className="alert-title">{pendingReturnsCount} devoluciones pendientes</div>
+                    <div className="alert-sub">Esperando revisión y confirmación</div>
                   </div>
                   <ChevronRight size={16} className="alert-chevron" />
                 </div>
@@ -416,6 +432,16 @@ const AdminPrestamos = () => {
                   <ChevronRight size={16} className="alert-chevron" />
                 </div>
               )}
+              {pendingPickupsCount > 0 && (
+                <div className="alert-item">
+                  <div className="alert-icon-wrap alert-amber"><Package size={18} /></div>
+                  <div className="alert-info">
+                    <div className="alert-title">{pendingPickupsCount} retiros pendientes</div>
+                    <div className="alert-sub">Libros listos para entregar en ventanilla</div>
+                  </div>
+                  <ChevronRight size={16} className="alert-chevron" />
+                </div>
+              )}
               {priorityReservations.length > 0 && (
                 <div className="alert-item">
                   <div className="alert-icon-wrap alert-purple"><User size={18} /></div>
@@ -426,15 +452,20 @@ const AdminPrestamos = () => {
                   <ChevronRight size={16} className="alert-chevron" />
                 </div>
               )}
+              {reservations.length > 0 && !priorityReservations.length && (
+                <div className="alert-item">
+                  <div className="alert-icon-wrap alert-purple"><Clock size={18} /></div>
+                  <div className="alert-info">
+                    <div className="alert-title">{reservations.length} reservas en cola</div>
+                    <div className="alert-sub">Esperando disponibilidad</div>
+                  </div>
+                  <ChevronRight size={16} className="alert-chevron" />
+                </div>
+              )}
               {!hasAlerts && (
                 <div className="mostrador-empty" style={{ padding: '1.5rem 0' }}><p style={{ fontSize: '0.82rem' }}>Sin alertas activas. ¡Todo en orden! ✨</p></div>
               )}
             </div>
-            {hasAlerts && (
-              <div className="mostrador-section-footer">
-                <button onClick={() => setActiveTab('extensiones')}>Ver todos los recordatorios <ArrowRight size={14} /></button>
-              </div>
-            )}
           </div>
         </div>
       </div>

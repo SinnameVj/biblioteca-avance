@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Book, Users, Clock, AlertTriangle, ArrowRight, Download, Calendar, User, ChevronRight, X, Search, BookOpen, RotateCcw, Bookmark, TrendingUp, Bell } from 'lucide-react'
+import { Book, Users, Clock, AlertTriangle, ArrowRight, Download, Calendar, ChevronRight, BookOpen, RotateCcw, Bookmark, Bell } from 'lucide-react'
 import { useAppContext } from '../../context/AppContext'
 import { useNavigate } from 'react-router-dom'
 import { migrateData } from '../../data/migrate-to-supabase'
@@ -41,9 +41,7 @@ const Dashboard = () => {
   const [migrating, setMigrating] = useState(false)
   const [chartRange, setChartRange] = useState('7')
   const [barYear, setBarYear] = useState('current')
-  const [alertsModal, setAlertsModal] = useState(false)
-  const [alertFilter, setAlertFilter] = useState('all')
-  const [alertSearch, setAlertSearch] = useState('')
+
 
   const handleMigrate = async () => {
     setMigrating(true)
@@ -193,13 +191,7 @@ const Dashboard = () => {
   const iconMap = { loan: <BookOpen size={15} />, return: <RotateCcw size={15} />, reserve: <Bookmark size={15} />, extension: <Clock size={15} />, penalty: <AlertTriangle size={15} /> }
   const alertIconMap = { danger: <AlertTriangle size={15} />, warning: <Bell size={15} />, info: <Clock size={15} />, purple: <Bookmark size={15} /> }
 
-  // Filtered alerts for modal
-  const filteredAlerts = useMemo(() => {
-    let list = alerts
-    if (alertFilter !== 'all') list = list.filter(a => a.category === alertFilter)
-    if (alertSearch) list = list.filter(a => a.title.toLowerCase().includes(alertSearch.toLowerCase()) || a.sub.toLowerCase().includes(alertSearch.toLowerCase()))
-    return list
-  }, [alerts, alertFilter, alertSearch])
+
 
   return (
     <div>
@@ -218,13 +210,6 @@ const Dashboard = () => {
           <div className="dash-date-badge">
             <Calendar size={15} />
             {format(new Date(), "d 'de' MMMM, yyyy", { locale: es })}
-          </div>
-          <div className="dash-admin-badge">
-            <div className="admin-text">
-              <span>ADMIN</span>
-              <span>{currentUser?.name || 'Administrador'}</span>
-            </div>
-            <div className="dash-admin-avatar"><User size={18} /></div>
           </div>
         </div>
       </div>
@@ -399,7 +384,7 @@ const Dashboard = () => {
             })}
             {books.length === 0 && <div className="dash-empty"><p>Sin libros registrados</p></div>}
           </div>
-          <button className="dash-card-footer-link" onClick={() => navigate('/admin/control-libros')} style={{ marginTop: '1rem' }}>Ir a Control de Libros <ArrowRight size={14} /></button>
+          <button className="dash-card-footer-link" onClick={() => navigate('/admin/catalogo')} style={{ marginTop: '1rem' }}>Ir al Catálogo <ArrowRight size={14} /></button>
         </div>
 
         {/* Actividad Reciente */}
@@ -429,11 +414,11 @@ const Dashboard = () => {
               Alertas y Pendientes
               {alerts.length > 0 && <span className="dash-alerts-badge">{alerts.length}</span>}
             </h3>
-            <button className="dash-section-link" onClick={() => setAlertsModal(true)}>Ver todas <ChevronRight size={14} /></button>
+            <button className="dash-section-link" onClick={() => navigate('/admin/prestamos')}>Ver todas <ChevronRight size={14} /></button>
           </div>
           <div className="dash-alert-list">
             {alerts.length > 0 ? alerts.slice(0, 4).map((a, i) => (
-              <div key={i} className="dash-alert-item" onClick={() => setAlertsModal(true)}>
+              <div key={i} className="dash-alert-item" onClick={() => navigate('/admin/prestamos')}>
                 <div className={`dash-alert-icon alert-${a.type}`}>{alertIconMap[a.type]}</div>
                 <div className="dash-alert-content">
                   <p className="dash-alert-title">{a.title}</p>
@@ -446,39 +431,11 @@ const Dashboard = () => {
               </div>
             )) : <div className="dash-empty"><p>Sin alertas pendientes 🎉</p></div>}
           </div>
-          <button className="dash-card-footer-link" onClick={() => setAlertsModal(true)} style={{ marginTop: '1rem' }}>Ver todas las alertas <ArrowRight size={14} /></button>
+          <button className="dash-card-footer-link" onClick={() => navigate('/admin/prestamos')} style={{ marginTop: '1rem' }}>Ir a Mostrador <ArrowRight size={14} /></button>
         </div>
       </div>
 
-      {/* Alerts Modal */}
-      {alertsModal && (
-        <div className="dash-modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setAlertsModal(false) }}>
-          <div className="dash-modal">
-            <div className="dash-modal-header">
-              <h2>Todas las Alertas y Pendientes</h2>
-              <button className="dash-modal-close" onClick={() => setAlertsModal(false)}><X size={16} /></button>
-            </div>
-            <div className="dash-modal-filters">
-              {[{ key: 'all', label: 'Todas' }, { key: 'vencidos', label: 'Vencidos' }, { key: 'por_vencer', label: 'Por vencer' }, { key: 'devoluciones', label: 'Devoluciones' }, { key: 'extensiones', label: 'Extensiones' }, { key: 'retiros', label: 'Retiros' }, { key: 'reservas', label: 'Reservas' }].map(f => (
-                <button key={f.key} className={`dash-modal-filter-btn${alertFilter === f.key ? ' active' : ''}`} onClick={() => setAlertFilter(f.key)}>{f.label}</button>
-              ))}
-            </div>
-            <div className="dash-modal-body">
-              <input className="dash-modal-search" placeholder="Buscar alertas..." value={alertSearch} onChange={e => setAlertSearch(e.target.value)} />
-              {filteredAlerts.length > 0 ? filteredAlerts.map((a, i) => (
-                <div key={i} className="dash-modal-alert-item">
-                  <div className={`dash-alert-icon alert-${a.type}`}>{alertIconMap[a.type]}</div>
-                  <div className="dash-alert-content">
-                    <p className="dash-alert-title">{a.title}</p>
-                    <p className="dash-alert-sub">{a.sub}</p>
-                  </div>
-                  <span className="dash-alert-time">{a.time}</span>
-                </div>
-              )) : <div className="dash-empty"><p>No hay alertas con estos filtros</p></div>}
-            </div>
-          </div>
-        </div>
-      )}
+
     </div>
   )
 }
