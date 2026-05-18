@@ -227,7 +227,7 @@ const Dashboard = () => {
           <div className="dash-kpi-icon kpi-purple"><Book size={20} /></div>
           <div className="dash-kpi-info">
             <div className="dash-kpi-value">{totalBooks.toLocaleString()}</div>
-            <div className="dash-kpi-label">Libros en Catálogo</div>
+            <div className="dash-kpi-label">Libros en inventario</div>
           </div>
         </div>
         <div className="dash-kpi-card kpi-cyan">
