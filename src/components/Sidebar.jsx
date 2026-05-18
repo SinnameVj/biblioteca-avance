@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { NavLink, useNavigate, useLocation } from 'react-router-dom'
-import { BookOpen, Users, LogOut, Grid, BookMarked, User, AlertTriangle, ClipboardList, ChevronDown, History, Package } from 'lucide-react'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { BookOpen, Users, LogOut, Grid, BookMarked, User, AlertTriangle, ClipboardList, History } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 
 const SIDEBAR_COLLAPSED = '72px'
@@ -9,9 +9,7 @@ const SIDEBAR_EXPANDED = '230px'
 const Sidebar = () => {
   const { currentUser, logout } = useAppContext()
   const navigate = useNavigate()
-  const location = useLocation()
   const [expanded, setExpanded] = useState(false)
-  const [inventoryOpen, setInventoryOpen] = useState(true)
 
   const handleLogout = () => {
     logout()
@@ -47,10 +45,7 @@ const Sidebar = () => {
       items: [{ path: '/admin', icon: <Grid size={18} />, label: 'Dashboard', end: true }]
     },
     {
-      title: 'CATÁLOGO',
-      expandable: true,
-      expandKey: 'inventory',
-      icon: <Package size={18} />,
+      title: 'INVENTARIO',
       items: [
         { path: '/admin/catalogo', icon: <BookOpen size={18} />, label: 'Catálogo' },
         { path: '/admin/prestamos', icon: <BookMarked size={18} />, label: 'Mostrador' },
@@ -74,57 +69,24 @@ const Sidebar = () => {
     },
   ]
 
-  const isInventoryActive = location.pathname.startsWith('/admin/catalogo') || location.pathname.startsWith('/admin/prestamos')
-
   /* ─── Render admin sidebar ─── */
   const renderAdminNav = () => (
     <nav className="sidebar-nav">
       {adminSections.map((section, sIdx) => (
         <div key={sIdx} className="sidebar-section">
-          {/* Section title - only visible when expanded */}
           <div className="sidebar-section-title">{section.title}</div>
-
-          {section.expandable ? (
-            <>
-              {/* Expandable group header */}
-              <button
-                className={`sidebar-link sidebar-group-toggle${isInventoryActive ? ' group-active' : ''}`}
-                onClick={() => setInventoryOpen(!inventoryOpen)}
-                title={!expanded ? section.title : undefined}
-              >
-                <span className="sidebar-link-icon">{section.icon}</span>
-                <span className="sidebar-link-label">{section.title.charAt(0) + section.title.slice(1).toLowerCase()}</span>
-                <span className={`sidebar-chevron${inventoryOpen ? ' open' : ''}`}><ChevronDown size={14} /></span>
-              </button>
-              {/* Sub-items */}
-              <div className={`sidebar-sub-items${inventoryOpen ? ' sub-open' : ''}`}>
-                {section.items.map(link => (
-                  <NavLink
-                    key={link.path}
-                    to={link.path}
-                    className={({ isActive }) => `sidebar-link sidebar-sub-link${isActive ? ' active' : ''}`}
-                    title={!expanded ? link.label : undefined}
-                  >
-                    <span className="sidebar-link-icon sidebar-sub-icon">{link.icon}</span>
-                    <span className="sidebar-link-label">{link.label}</span>
-                  </NavLink>
-                ))}
-              </div>
-            </>
-          ) : (
-            section.items.map(link => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
-                end={link.end}
-                title={!expanded ? link.label : undefined}
-              >
-                <span className="sidebar-link-icon">{link.icon}</span>
-                <span className="sidebar-link-label">{link.label}</span>
-              </NavLink>
-            ))
-          )}
+          {section.items.map(link => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+              end={link.end}
+              title={!expanded ? link.label : undefined}
+            >
+              <span className="sidebar-link-icon">{link.icon}</span>
+              <span className="sidebar-link-label">{link.label}</span>
+            </NavLink>
+          ))}
         </div>
       ))}
     </nav>
