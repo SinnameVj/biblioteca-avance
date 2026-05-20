@@ -39,8 +39,8 @@ const AdminUsuarios = () => {
   return (
     <div className="animate-fade-in">
       <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 600, marginBottom: '0.5rem' }}>Directorio General de Usuarios</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Gestión de perfiles, búsqueda de identidad institucional y comunicación directa.</p>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 600, marginBottom: '0.5rem' }}>Control de Usuarios</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Consulta de perfiles e historial bibliotecario</p>
       </div>
 
       <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
@@ -61,9 +61,9 @@ const AdminUsuarios = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
           <thead>
             <tr style={{ background: 'var(--bg-tertiary)', borderBottom: '1px solid var(--border-light)', textAlign: 'left', color: 'var(--text-muted)' }}>
-              <th style={{ padding: '1rem 1.5rem', fontWeight: 500 }}>Identidad del Estamento</th>
+              <th style={{ padding: '1rem 1.5rem', fontWeight: 500 }}>Perfil Institucional</th>
               <th style={{ padding: '1rem 1.5rem', fontWeight: 500 }}>Tipo de Usuario</th>
-              <th style={{ padding: '1rem 1.5rem', fontWeight: 500 }}>Estado Financiero</th>
+              <th style={{ padding: '1rem 1.5rem', fontWeight: 500 }}>Estado</th>
               <th style={{ padding: '1rem 1.5rem', fontWeight: 500, textAlign: 'right' }}>Gestión / Contacto</th>
             </tr>
           </thead>

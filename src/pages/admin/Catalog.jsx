@@ -270,8 +270,8 @@ const AdminCatalog = () => {
       {/* Header */}
       <div className="inv-header">
         <div className="inv-header-left">
-          <h1>Inventario Bibliográfico</h1>
-          <p>Gestión completa del inventario físico y digital del Campus.</p>
+          <h1>INVENTARIO</h1>
+          <p>Gestión completa del inventario.</p>
         </div>
         <div className="inv-header-right">
           <button className="inv-btn-add" onClick={handleOpenAdd}><Plus size={16} /> Añadir obra</button>
@@ -284,7 +284,7 @@ const AdminCatalog = () => {
           <div className="inv-kpi-icon kpi-blue"><Package size={20} /></div>
           <div className="inv-kpi-info">
             <div className="inv-kpi-value">{totalCopies.toLocaleString()}</div>
-            <div className="inv-kpi-label">Total de ejemplares</div>
+            <div className="inv-kpi-label">Total de libros</div>
           </div>
         </div>
         <div className="inv-kpi-card kpi-green">
