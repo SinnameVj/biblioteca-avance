@@ -263,7 +263,7 @@ const AdminCatalog = () => {
   }
 
   return (
-    <div className="animate-fade-in">
+    <div className="inv-page-wrapper animate-fade-in">
       <BookModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={editingBook ? handleUpdate : handleAdd} editingBook={editingBook} existingCategories={existingCategories} />
       <DeleteConfirmModal isOpen={deleteConfirm.isOpen} bookTitle={deleteConfirm.bookTitle} onConfirm={confirmDelete} onCancel={() => setDeleteConfirm({ isOpen: false, bookId: null, bookTitle: '' })} />
 

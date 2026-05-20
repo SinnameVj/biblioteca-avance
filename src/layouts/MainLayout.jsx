@@ -10,7 +10,7 @@ const MainLayout = () => {
       {/* marginLeft matches sidebar collapsed width (72px) */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', marginLeft: '72px', minHeight: '100vh', minWidth: 0 }}>
         <TopBar />
-        <main className="animate-fade-in" style={{ padding: '2rem', flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+        <main className="animate-fade-in" style={{ padding: '2rem', flex: 1, overflowY: 'auto', overflowX: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <Outlet />
         </main>
       </div>
